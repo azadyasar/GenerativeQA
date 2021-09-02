@@ -23,6 +23,7 @@ class TestConfig(unittest.TestCase):
     encoded = dataset.concat_passage_question(p, q)
     self.assertIsNotNone(encoded)
     self.assertGreater(len(encoded), 0)
+    # cls + passage + sep + question + sep 
     self.assertEqual(len(encoded), 1 + dataset.max_passage_len + 1 + dataset.max_question_len + 1)
     self.assertEqual(encoded[0], vocab.cls_idx)
     self.assertEqual(encoded[dataset.max_passage_len + 1], vocab.sep_idx)
