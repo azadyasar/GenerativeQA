@@ -1,0 +1,30 @@
+import unittest
+from qa import data
+from qa.data import Vocabulary, BoolQDataset
+from qa.util.helpers import get_device
+
+vocab = Vocabulary()
+dataset = BoolQDataset(vocab=vocab, device=get_device(),
+                       max_passage_len=64, max_question_len=16)
+
+class TestConfig(unittest.TestCase):
+  def test_should_create_vocab_object(self):
+
+    self.assertIsNotNone(dataset)
+    
+  def test_should_read_index_dataset(self):
+    dataset.read_and_index()
+    self.assertGreater(len(dataset), 0)
+    
+  def test_should_encode_passage_question_pair(self):
+    p = "This case is meant to test whether the dataset can encode concat"
+    q = "Can it though?"
+    encoded = dataset.concat_passage_question(p, q)
+    self.assertIsNotNone(encoded)
+    self.assertGreater(len(encoded), 0)
+    self.assertEqual(len(encoded), 1 + dataset.max_passage_len + 1 + dataset.max_question_len + 1)
+    self.assertEqual(encoded[0], vocab.cls_idx)
+    self.assertEqual(encoded[dataset.max_passage_len + 1], vocab.sep_idx)
+    self.assertEqual(encoded[-1], vocab.sep_idx)
+    
+    
