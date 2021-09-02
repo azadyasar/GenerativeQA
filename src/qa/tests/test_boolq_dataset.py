@@ -6,6 +6,7 @@ from qa.util.helpers import get_device
 vocab = Vocabulary()
 dataset = BoolQDataset(vocab=vocab, device=get_device(),
                        max_passage_len=64, max_question_len=16)
+dataset.read_and_index()
 
 class TestConfig(unittest.TestCase):
   def test_should_create_vocab_object(self):
@@ -13,7 +14,7 @@ class TestConfig(unittest.TestCase):
     self.assertIsNotNone(dataset)
     
   def test_should_read_index_dataset(self):
-    dataset.read_and_index()
+    # dataset.read_and_index()
     self.assertGreater(len(dataset), 0)
     
   def test_should_encode_passage_question_pair(self):
@@ -27,4 +28,10 @@ class TestConfig(unittest.TestCase):
     self.assertEqual(encoded[dataset.max_passage_len + 1], vocab.sep_idx)
     self.assertEqual(encoded[-1], vocab.sep_idx)
     
+  def test_should_generate_batch(self):
+    batch = next(dataset.generate(16))
     
+    self.assertIsNotNone(batch)
+    self.assertEqual(len(batch.src), 16)
+    self.assertEqual(len(batch.trg), 16)
+    self.assertEqual(batch.src.device, get_device())

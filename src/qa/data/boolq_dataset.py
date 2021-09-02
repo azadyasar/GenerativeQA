@@ -53,7 +53,7 @@ class BoolQDataset(Dataset):
     return 0
     
   def generate(self, batch_sz: int) -> Batch:
-    for i in range(0, self.__len__, batch_sz):
+    for i in range(0, len(self.train_dataset_x), batch_sz):
       src_tensor = self.pad_tensor(self.train_dataset_x[i:i+batch_sz], self.vocab.pad_idx)
       trg_tensor = self.pad_tensor(self.train_dataset_y[i:i+batch_sz], self.vocab.pad_idx)
       batch = Batch(src=src_tensor, trg=trg_tensor, device=self.device)

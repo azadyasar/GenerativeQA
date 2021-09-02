@@ -4,10 +4,9 @@ from typing import List
 from qa.data.vocabulary import Vocabulary
 
 class Batch(object):
-  def __init__(self, passage, question, answer, device):
-    self.passage = passage.to(device)
-    self.question = question.to(device)
-    self.answer = answer.to(device)
+  def __init__(self, src: torch.Tensor, trg: torch.Tensor, device):
+    self.src = src.to(device)
+    self.trg = trg.to(device)
     
 class Dataset(object):
   
