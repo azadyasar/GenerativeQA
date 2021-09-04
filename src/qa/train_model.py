@@ -7,7 +7,7 @@ from qa.util import get_device, get_dataset
 import numpy as np
 
 import logging
-logger = logging.getLevelName("Trainer")
+logger = logging.getLogger("Trainer")
 
 def train_qa_model(args: argparse.Namespace):
   vocab = Vocabulary()

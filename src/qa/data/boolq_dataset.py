@@ -3,7 +3,7 @@ import torch
 from tqdm import tqdm
 from datasets import load_dataset
 from typing import List
-
+import numpy
 import logging
 
 from qa.data import Batch
@@ -40,13 +40,21 @@ class BoolQDataset(Dataset):
     for instance in tqdm(self.data_loader.generate(self.is_train)):
       p = instance['passage']
       q = instance['question']
-      a = str(instance['answer'])
+      a =  "yes it is true" if bool(instance['answer']) else "no it is not true"
       encoded_pq = torch.tensor(self.concat_passage_question(p, q))
       encoded_a = torch.tensor(self.encode_answer(a))
       self.train_dataset_x.append(encoded_pq)
       self.train_dataset_y.append(encoded_a)
     logger.info(f"Indexed {len(self.train_dataset_x)} instances.")
+    self.train_dataset_x, self.train_dataset_y = BoolQDataset.shuffle(self.train_dataset_x, self.train_dataset_y)
+    print("trainx[:2] = ", self.train_dataset_x[:2])
+    print("trainy[:2] = ", self.train_dataset_y[:2])
       
+  def shuffle(a, b):
+    assert len(a) == len(b)
+    p = numpy.random.permutation(len(a))
+    return a[p], b[p]
+    
   def __len__(self):
     if self.train_dataset_x:
       return len(self.train_dataset_x)
@@ -56,6 +64,8 @@ class BoolQDataset(Dataset):
     for i in range(0, len(self.train_dataset_x), batch_sz):
       src_tensor = self.pad_tensor(self.train_dataset_x[i:i+batch_sz], self.vocab.pad_idx)
       trg_tensor = self.pad_tensor(self.train_dataset_y[i:i+batch_sz], self.vocab.pad_idx)
+      print('trg_tensor: ', trg_tensor)
+      print('shape: ', trg_tensor.shape)
       batch = Batch(src=src_tensor, trg=trg_tensor, device=self.device)
       
       yield batch

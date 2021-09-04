@@ -26,9 +26,6 @@ class Vocabulary(object):
   def decode(self, tokens: List[int], skip_special_tokens: bool = False) -> str:
     return self.tokenizer.decode(tokens, skip_special_tokens=skip_special_tokens)
   
-  def decode_with_check(self, tokens: List[int]) -> str:
-    return self.tokenizer.DecodeIdsWithCheck(tokens)
-  
   def id_to_piece(self, id: int) -> str:
     return self.tokenizer.convert_ids_to_tokens(id)
   
