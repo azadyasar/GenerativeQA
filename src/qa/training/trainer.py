@@ -37,7 +37,7 @@ class Trainer(object):
       
   def train(self,
             train_dataset: Dataset,
-            valid_dataset: Dataset):
+            eval_dataset: Dataset):
     best_valid_loss = float('inf')
     train_losses, valid_losses = [], []
     
@@ -46,7 +46,7 @@ class Trainer(object):
       
       train_loss = self.train_(train_dataset)
       torch.cuda.empty_cache()
-      valid_loss = self.evaluate_(valid_dataset)
+      valid_loss = self.evaluate_(eval_dataset)
       lr = get_lr(self.optimizer)
       self.scheduler.step()
       

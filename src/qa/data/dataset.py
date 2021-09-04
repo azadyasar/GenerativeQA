@@ -25,6 +25,10 @@ class Dataset(object):
   def generate(self, batch_sz: int) -> Batch:
     pass
   
+  @abstractmethod
+  def read_and_index(self) -> None:
+    pass
+  
   def pad_tensor(self,
                  sequences: List[torch.Tensor],
                  pad_idx: int) -> torch.Tensor:

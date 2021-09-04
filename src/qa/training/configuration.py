@@ -24,7 +24,9 @@ class TransformerModelConfig(object):
                device: str,
                src_vocab: Vocabulary,
                trg_vocab: Vocabulary,
-               max_length: int,
+               max_passage_len: int,
+               max_question_len: int,
+               max_answer_len: int,
                batch_sz: int,
                save_model_path: str = 'transformer_nmt.pt') -> None:
     super().__init__()
@@ -44,9 +46,13 @@ class TransformerModelConfig(object):
     self.trg_vocab = trg_vocab
     self.src_pad_idx = self.src_vocab.pad_idx
     self.trg_pad_idx = self.trg_vocab.pad_idx
-    self.max_length = max_length
+    self.max_passage_len = max_passage_len
+    self.max_question_len = max_question_len
+    self.max_answer_len = max_answer_len
     self.batch_sz = batch_sz
     self.save_model_path = save_model_path
+    
+    self.max_length = self.max_passage_len + self.max_question_len + 4
     
   def create_model(self):
     enc = Encoder(self.input_dim,
@@ -64,7 +70,7 @@ class TransformerModelConfig(object):
                   self.dec_pf_dim,
                   self.dec_dropout,
                   self.device,
-                  self.max_length)
+                  self.max_answer_len)
     
     model = Transformer(encoder=enc,
                         decoder=dec,

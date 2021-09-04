@@ -34,7 +34,7 @@ class BoolQDataset(Dataset):
     return [self.vocab.bos_idx] + self.vocab.encode(answer) + [self.vocab.eos_idx]
     
   def read_and_index(self):
-    logger.info(f"Reading and indexing the dataset -{self.data_loader.name}-")
+    logger.info(f"Reading and indexing the dataset -{self.data_loader.name}- is_train: {self.is_train}")
     self.train_dataset_x = []
     self.train_dataset_y = []
     for instance in tqdm(self.data_loader.generate(self.is_train)):

@@ -60,5 +60,5 @@ class Vocabulary(object):
     return self.tokenizer.cls_token_id
   
   def __len__(self) -> int:
-    return self.tokenizer.vocab_size
+    return self.tokenizer.vocab_size + len(self.tokenizer.get_added_vocab())
   
