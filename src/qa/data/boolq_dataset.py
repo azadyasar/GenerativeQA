@@ -6,19 +6,21 @@ from typing import List
 
 import logging
 
-from qa.data.dataset import Batch
+from qa.data import Batch
+from qa.data.glue import BoolQDataLoader
 logger = logging.getLogger("BoolQDataset")
 
-BOOLQ_DATASET_NAME = 'boolq'
 
 class BoolQDataset(Dataset):
-  def __init__(self, vocab: Vocabulary, device: str,
+  def __init__(self, vocab: Vocabulary,
+               data_loader: BoolQDataLoader,
+               device: str,
                max_passage_len: int = 256,
-               max_question_len: int = 32) -> None:
+               max_question_len: int = 32,
+               is_train: bool = True) -> None:
     super().__init__(vocab, device)
-    self.dataset = load_dataset(BOOLQ_DATASET_NAME)
-    self.train = self.dataset['train']
-    self.validation = self.dataset['validation']
+    self.data_loader = data_loader
+    self.is_train = is_train
     self.max_passage_len = max_passage_len
     self.max_question_len = max_question_len
     
@@ -32,12 +34,10 @@ class BoolQDataset(Dataset):
     return [self.vocab.bos_idx] + self.vocab.encode(answer) + [self.vocab.eos_idx]
     
   def read_and_index(self):
-    logger.info(f"Reading and indexing the dataset -{BOOLQ_DATASET_NAME}-")
+    logger.info(f"Reading and indexing the dataset -{self.data_loader.name}-")
     self.train_dataset_x = []
     self.train_dataset_y = []
-    self.valid_dataset_x = []
-    self.valid_dataset_y = []
-    for instance in tqdm(self.train):
+    for instance in tqdm(self.data_loader.generate(self.is_train)):
       p = instance['passage']
       q = instance['question']
       a = str(instance['answer'])

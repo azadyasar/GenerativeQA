@@ -1,11 +1,14 @@
 import unittest
-from qa import data
-from qa.data import Vocabulary, BoolQDataset
+from qa.data import Vocabulary, BoolQDataset, BoolQDataLoader
 from qa.util.helpers import get_device
 
 vocab = Vocabulary()
-dataset = BoolQDataset(vocab=vocab, device=get_device(),
-                       max_passage_len=64, max_question_len=16)
+loader = BoolQDataLoader()
+dataset = BoolQDataset(vocab=vocab,
+                       data_loader=loader,
+                       device=get_device(),
+                       max_passage_len=64, max_question_len=16,
+                       is_train=True)
 dataset.read_and_index()
 
 class TestConfig(unittest.TestCase):
