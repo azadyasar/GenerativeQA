@@ -5,15 +5,16 @@ from typing import List
 from os import path
 import pickle
 import logging
+logger = logging.getLogger("SQuADDataset")
 
 from qa.data import Batch
-from qa.data.glue import BoolQDataLoader
-logger = logging.getLogger("BoolQDataset")
+from qa.data.glue import SquadDataLoader
 
 
-class BoolQDataset(Dataset):
-  def __init__(self, vocab: Vocabulary,
-               data_loader: BoolQDataLoader,
+class SquadDataset(Dataset):
+  def __init__(self,
+               vocab: Vocabulary,
+               data_loader: SquadDataLoader,
                device: str,
                max_passage_len: int = 256,
                max_question_len: int = 32,
@@ -34,7 +35,7 @@ class BoolQDataset(Dataset):
   
   def encode_answer(self, answer: str) -> List[int]:
     return [self.vocab.bos_idx] + self.vocab.encode_plus(answer, max_length=self.max_answer_len) + [self.vocab.eos_idx]
-    
+  
   def read_and_index(self):
     logger.info(f"Reading and indexing the dataset -{self.data_loader.name}- is_train: {self.is_train}")
     filename = self.cache_filename(self.data_loader.name)
@@ -45,12 +46,13 @@ class BoolQDataset(Dataset):
       self.train_dataset_y = cache_obj['y']
       logger.info(f"Loaded from cache..")
       return
+    
     self.train_dataset_x = []
     self.train_dataset_y = []
     for instance in tqdm(self.data_loader.generate(self.is_train)):
-      p = instance['passage']
+      p = instance['context']
       q = instance['question']
-      a =  "yes it is true" if bool(instance['answer']) else "no it is not true"
+      a =  str(instance['answers']['text'][0])
       encoded_pq = torch.tensor(self.concat_passage_question(p, q))
       encoded_a = torch.tensor(self.encode_answer(a))
       self.train_dataset_x.append(encoded_pq)
@@ -88,4 +90,3 @@ class BoolQDataset(Dataset):
       batch = Batch(src=src_tensor, trg=trg_tensor, device=self.device)
       
       yield batch
-      

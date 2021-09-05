@@ -8,6 +8,7 @@ dataset = BoolQDataset(vocab=vocab,
                        data_loader=loader,
                        device=get_device(),
                        max_passage_len=64, max_question_len=16,
+                       max_answer_len=8,
                        is_train=True)
 dataset.read_and_index()
 

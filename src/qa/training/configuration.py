@@ -70,7 +70,7 @@ class TransformerModelConfig(object):
                   self.dec_pf_dim,
                   self.dec_dropout,
                   self.device,
-                  self.max_answer_len)
+                  self.max_answer_len + 2)
     
     model = Transformer(encoder=enc,
                         decoder=dec,

@@ -53,7 +53,7 @@ class TransformerModelConfig(object):
     
     self.max_length = self.max_passage_len + self.max_question_len + 4
     
-  def create_model(self):
+  def load_model(self):
     enc = Encoder(self.input_dim,
                   self.hid_dim,
                   self.enc_layers,
@@ -69,7 +69,7 @@ class TransformerModelConfig(object):
                   self.dec_pf_dim,
                   self.dec_dropout,
                   self.device,
-                  self.max_answer_len)
+                  self.max_answer_len + 2)
     
     model = Transformer(encoder=enc,
                         decoder=dec,

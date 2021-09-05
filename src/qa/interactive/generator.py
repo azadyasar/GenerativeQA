@@ -15,7 +15,7 @@ class Generator(object):
   def __init__(self,
                config: TransformerModelConfig):
     self.config = config
-    self.model = config.create_model()
+    self.model = config.load_model()
     
   def concat_passage_question(self, passage : str, question: str) -> List[int]:
     result = [self.config.src_vocab.cls_idx] + self.config.src_vocab.encode_plus(passage, self.config.max_passage_len) + [self.config.src_vocab.sep_idx]

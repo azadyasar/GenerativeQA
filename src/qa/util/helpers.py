@@ -1,15 +1,18 @@
 import pickle
 import torch
 import torch.nn as nn
-from qa.data.boolq_dataset import BoolQDataset
+from qa.data import Dataset, BoolQDataset, SquadDataset
 
-from qa.data.dataset import Dataset
-from qa.data.glue.boolq_data_loader import BoolQDataLoader
+from qa.data.glue import BoolQDataLoader, SquadDataLoader
 
 dataset_loader_map = {
   'boolq': {
     'dataset': BoolQDataset,
     'dataloader': BoolQDataLoader
+  },
+  'squad': {
+    'dataset': SquadDataset,
+    'dataloader': SquadDataLoader
   }
 }
 

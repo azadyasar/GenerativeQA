@@ -1,6 +1,5 @@
 import argparse
-from qa.data import Vocabulary, Dataset
-from qa.data.boolq_dataset import BoolQDataset
+from qa.data import Vocabulary
 from qa.training import Trainer
 from qa.training.configuration import TransformerModelConfig
 from qa.util import get_device, get_dataset
@@ -42,6 +41,7 @@ def train_qa_model(args: argparse.Namespace):
     'device': device,
     'max_passage_len': config.max_passage_len,
     'max_question_len': config.max_question_len,
+    'max_answer_len': config.max_answer_len,
     'is_train': True
   })
   
@@ -50,7 +50,7 @@ def train_qa_model(args: argparse.Namespace):
     'vocab': vocab,
     'device': device,
     'max_passage_len': config.max_passage_len,
-    'max_question_len': config.max_question_len,
+    'max_answer_len': config.max_answer_len,
     'is_train': False
   })
   
