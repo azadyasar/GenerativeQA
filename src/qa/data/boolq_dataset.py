@@ -45,6 +45,7 @@ class BoolQDataset(Dataset):
       self.train_dataset_y = cache_obj['y']
       logger.info(f"Loaded from cache..")
       return
+    
     self.train_dataset_x = []
     self.train_dataset_y = []
     for instance in tqdm(self.data_loader.generate(self.is_train)):
